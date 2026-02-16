@@ -1,26 +1,121 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: #050505;
+  --color-foreground: #ededed;
+  --color-spotify-green: #1db954;
+  --color-spotify-green-light: #1ed760;
+  --color-deep-purple: #6b21a8;
+  --color-glass: rgba(255, 255, 255, 0.1);
+  --color-glass-border: rgba(255, 255, 255, 0.2);
+  --color-glass-hover: rgba(255, 255, 255, 0.15);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated mesh gradient background */
+@keyframes blob-drift-1 {
+  0%, 100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+  25% {
+    transform: translate(10%, -15%) scale(1.1);
+  }
+  50% {
+    transform: translate(-5%, 10%) scale(0.95);
+  }
+  75% {
+    transform: translate(-10%, -5%) scale(1.05);
+  }
+}
+
+@keyframes blob-drift-2 {
+  0%, 100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+  25% {
+    transform: translate(-12%, 10%) scale(1.05);
+  }
+  50% {
+    transform: translate(8%, -12%) scale(1.1);
+  }
+  75% {
+    transform: translate(5%, 8%) scale(0.95);
+  }
+}
+
+.mesh-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mesh-blob-green {
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(29, 185, 84, 0.15) 0%, transparent 70%);
+  filter: blur(80px);
+  animation: blob-drift-1 20s ease-in-out infinite;
+}
+
+.mesh-blob-purple {
+  position: absolute;
+  bottom: -20%;
+  right: -10%;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(107, 33, 168, 0.2) 0%, transparent 70%);
+  filter: blur(80px);
+  animation: blob-drift-2 25s ease-in-out infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Progress bar animation */
+@keyframes progress-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }

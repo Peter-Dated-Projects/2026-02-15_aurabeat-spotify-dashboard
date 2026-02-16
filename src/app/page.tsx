@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 import {
   getTopTracks,
   getTopArtists,
-  getAverageAudioFeatures,
+  computeVibeFromGenres,
   getLikedSongsCount,
+  getRecentlyLikedSongs,
   getUserPlaylists,
 } from "@/lib/spotify";
 import DashboardClient from "./DashboardClient";
@@ -18,36 +19,25 @@ export default async function DashboardPage() {
   }
 
   // Fetch all data in parallel
-  const [topTracks, topArtists, likedSongs, playlists] = await Promise.all([
+  const [topTracks, topArtists, likedSongs, recentlyLiked, playlists] = await Promise.all([
     getTopTracks(accessToken),
-    getTopArtists(accessToken),
+    getTopArtists(accessToken, "medium_term", 50),
     getLikedSongsCount(accessToken),
+    getRecentlyLikedSongs(accessToken, 10),
     getUserPlaylists(accessToken),
   ]);
 
-  // Calculate audio features from top tracks
-  const trackIds = topTracks.map((t) => t.id);
-  let audioFeatures = {
-    energy: 0,
-    danceability: 0,
-    valence: 0,
-    acousticness: 0,
-    instrumentalness: 0,
-  };
-
-  try {
-    audioFeatures = await getAverageAudioFeatures(accessToken, trackIds);
-  } catch (e) {
-    console.error("Failed to fetch audio features:", e);
-  }
+  // Compute vibe radar from artist genres (replaces deprecated audio-features API)
+  const audioFeatures = computeVibeFromGenres(topArtists);
 
   return (
     <DashboardClient
       topTracks={topTracks}
-      topArtists={topArtists}
+      topArtists={topArtists.slice(0, 5)}
       audioFeatures={audioFeatures}
       likedSongs={likedSongs}
-      totalPlaylists={playlists.total}
+      recentlyLikedSongs={recentlyLiked}
+      playlists={playlists.items}
       user={session.user}
     />
   );

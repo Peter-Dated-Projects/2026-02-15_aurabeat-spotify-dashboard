@@ -6,16 +6,24 @@ import BentoGrid from "@/components/dashboard/BentoGrid";
 import NowPlaying from "@/components/dashboard/NowPlaying";
 import TopItemsList from "@/components/dashboard/TopItemsList";
 import AudioRadar from "@/components/dashboard/AudioRadar";
-import LibrarySnapshot from "@/components/dashboard/LibrarySnapshot";
+import LikedSongsList from "@/components/dashboard/LikedSongsList";
+import PlaylistsList from "@/components/dashboard/PlaylistsList";
 import MeshBackground from "@/components/MeshBackground";
-import { SpotifyTrack, SpotifyArtist, AudioFeatures } from "@/lib/spotify";
+import {
+  SpotifyTrack,
+  SpotifyArtist,
+  AudioFeatures,
+  SavedTrack,
+  SpotifyPlaylist,
+} from "@/lib/spotify";
 
 interface DashboardClientProps {
   topTracks: SpotifyTrack[];
   topArtists: SpotifyArtist[];
   audioFeatures: AudioFeatures;
   likedSongs: number;
-  totalPlaylists: number;
+  recentlyLikedSongs: SavedTrack[];
+  playlists: SpotifyPlaylist[];
   user: {
     id: string;
     name: string;
@@ -28,7 +36,8 @@ export default function DashboardClient({
   topArtists,
   audioFeatures,
   likedSongs,
-  totalPlaylists,
+  recentlyLikedSongs,
+  playlists,
   user,
 }: DashboardClientProps) {
   const handleLogout = () => {
@@ -85,8 +94,11 @@ export default function DashboardClient({
           {/* Audio Radar */}
           <AudioRadar features={audioFeatures} delay={0.4} />
 
-          {/* Library Snapshot */}
-          <LibrarySnapshot likedSongs={likedSongs} totalPlaylists={totalPlaylists} delay={0.5} />
+          {/* Recently Liked Songs */}
+          <LikedSongsList songs={recentlyLikedSongs} totalCount={likedSongs} delay={0.5} />
+
+          {/* Playlists */}
+          <PlaylistsList playlists={playlists} delay={0.6} />
         </BentoGrid>
 
         {/* Footer */}

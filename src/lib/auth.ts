@@ -24,7 +24,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
       },
       token: {
-        async request(context) {
+        async request(context: any) {
           const code = context.params.code as string;
           
           console.log("Token exchange - using redirect_uri:", redirectUri);
